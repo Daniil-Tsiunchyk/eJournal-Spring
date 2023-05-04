@@ -14,8 +14,8 @@ public class StudentGroup {
         return groupNumber;
     }
 
-    public void setGroupNumber(String number) {
-        this.groupNumber = number;
+    public void setGroupNumber(String groupNumber) {
+        this.groupNumber = groupNumber;
     }
 
     public Long getId() {
