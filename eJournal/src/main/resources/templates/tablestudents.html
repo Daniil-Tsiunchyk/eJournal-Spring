@@ -5,46 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Студенты</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
 </head>
 <body>
-<div class="container mt-5">
-    <h1 class="text-center mb-4">Студенты</h1>
-    <div class="mb-3">
-        <label for="group" class="form-label">Выберите группу</label>
-        <select class="form-select" id="group" name="group" onchange="location = this.value;">
-            <option selected disabled>Выберите группу</option>
-            <th:block th:each="group : ${groups}">
-                <option th:value="'/tablestudents/' + ${group.groupNumber}" th:text="${group.groupNumber}"></option>
-            </th:block>
-        </select>
+<div th:insert="blocks/sidebar :: sidebar"></div>
+<div class="main">
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Студенты</h1>
+        <div class="mb-3">
+            <label for="group" class="form-label">Выберите группу</label>
+            <select class="form-select" id="group" name="group" onchange="location = this.value;">
+                <option selected disabled>Выберите группу</option>
+                <th:block th:each="group : ${groups}">
+                    <option th:value="'/tablestudents/' + ${group.groupNumber}" th:text="${group.groupNumber}"></option>
+                </th:block>
+            </select>
+        </div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Email</th>
+                <th scope="col">Логин</th>
+                <th scope="col">Группа</th>
+                <th scope="col">Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="student : ${students}">
+                <th scope="row" th:text="${student.id}"></th>
+                <td th:text="${student.email}"></td>
+                <td th:text="${student.login}"></td>
+                <td th:text="${student.groupNumber}"></td>
+                <td>
+                    <a class="btn btn-primary btn-sm" th:href="@{/editUser/{id}(id=${student.id})}" role="button">Редактировать</a>
+                    <form method="post" th:action="@{/deleteUser}" class="d-inline">
+                        <input type="hidden" name="userId" th:value="${student.id}">
+                        <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Email</th>
-            <th scope="col">Логин</th>
-            <th scope="col">Группа</th>
-            <th scope="col">Действия</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="student : ${students}">
-            <th scope="row" th:text="${student.id}"></th>
-            <td th:text="${student.email}"></td>
-            <td th:text="${student.login}"></td>
-            <td th:text="${student.groupNumber}"></td>
-            <td>
-                <a class="btn btn-primary btn-sm" th:href="@{/editUser/{id}(id=${student.id})}" role="button">Редактировать</a>
-                <form method="post" th:action="@{/deleteUser}" class="d-inline">
-                    <input type="hidden" name="userId" th:value="${student.id}">
-                    <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
 </div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>

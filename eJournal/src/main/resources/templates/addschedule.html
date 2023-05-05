@@ -3,36 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Добавить расписание</title>
+    <title>Обновление расписания</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
 </head>
 <body>
-<div class="container mt-4">
-    <h1>Добавить расписание</h1>
-    <form method="post" action="/addschedule">
-        <div class="mb-3">
-            <label>Предмет</label>
-            <input type="text" name="subject" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label>Время</label>
-            <input type="text" name="time" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label>День недели</label>
-            <input type="text" name="dayOfWeek" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label>Группа</label>
-            <input type="text" name="groupNumber" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label>Преподаватель</label>
-            <input type="text" name="teacherName" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Сохранить</button>
-        <a href="/schedule" class="btn btn-secondary">Отменить</a>
-    </form>
+<div th:insert="blocks/sidebar :: sidebar"></div>
+<div class="main">
+    <div class="container mt-4">
+        <h1>Добавить предмет в расписание</h1>
+        <form method="post" action="/schedule/addschedule">
+            <div class="mb-3">
+                <label>Предмет</label>
+                <input type="text" name="subject" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label>Время</label>
+                <select name="time" class="form-control" required>
+                    <option value="09:00">09:00</option>
+                    <option value="10:35">10:35</option>
+                    <option value="12:25">12:25</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:50">15:50</option>
+                    <option value="17:25">17:25</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label>День недели</label>
+                <select name="dayOfWeek" class="form-control" required>
+                    <option value="Понедельник">Понедельник</option>
+                    <option value="Вторник">Вторник</option>
+                    <option value="Среда">Среда</option>
+                    <option value="Четверг">Четверг</option>
+                    <option value="Пятница">Пятница</option>
+                    <option value="Суббота">Суббота</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label>Группа</label>
+                <select name="groupNumber" class="form-control" required>
+                    <option th:each="group : ${studentGroups}" th:value="${group.groupNumber}"
+                            th:text="${group.groupNumber}"></option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label>Преподаватель</label>
+                <input type="text" name="teacherName" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a href="/schedule" class="btn btn-secondary">Отменить</a>
+        </form>
+    </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>

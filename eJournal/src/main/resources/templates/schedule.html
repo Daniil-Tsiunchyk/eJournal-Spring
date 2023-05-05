@@ -5,39 +5,95 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Расписание</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
 </head>
 <body>
-<div class="container mt-4">
-    <h1>Расписание</h1>
-    <a href="/schedule/addschedule" class="btn btn-primary mb-2">Добавить расписание</a>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Предмет</th>
-            <th>Время</th>
-            <th>День недели</th>
-            <th>Группа</th>
-            <th>Преподаватель</th>
-            <th>Действия</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="schedule : ${schedules}">
-            <td th:text="${schedule.subject}"></td>
-            <td th:text="${schedule.time}"></td>
-            <td th:text="${schedule.dayOfWeek}"></td>
-            <td th:text="${schedule.groupNumber}"></td>
-            <td th:text="${schedule.teacherName}"></td>
-            <td>
-                <a class="btn btn-sm btn-primary" th:href="@{/editschedule/{id}(id=${schedule.id})}">Редактировать</a>
-                <a class="btn btn-sm btn-danger" th:href="@{/deleteschedule/{id}(id=${schedule.id})}">Удалить</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+<div th:insert="blocks/sidebar :: sidebar"></div>
+<div class="main">
+    <div class="container mt-4">
+        <h1>Расписание</h1>
+        <a href="/schedule/addschedule" class="btn btn-primary mb-2">Добавить предмет в расписание</a>
+        <table class="table">
+            <thead>
+            <tr>
+                <th onclick="sortTable(0)">Предмет <span class="arrow"></span></th>
+                <th onclick="sortTable(1)">Время <span class="arrow"></span></th>
+                <th onclick="sortTable(2)">День недели <span class="arrow"></span></th>
+                <th onclick="sortTable(3)">Группа <span class="arrow"></span></th>
+                <th onclick="sortTable(4)">Преподаватель <span class="arrow"></span></th>
+                <th>Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="schedule : ${schedules}">
+                <td th:text="${schedule.subject}"></td>
+                <td th:text="${schedule.time}"></td>
+                <td th:text="${schedule.dayOfWeek}"></td>
+                <td th:text="${schedule.groupNumber}"></td>
+                <td th:text="${schedule.teacherName}"></td>
+                <td>
+                    <a class="btn btn-sm btn-primary" th:href="@{/schedule/editschedule/{id}(id=${schedule.id})}">Редактировать</a>
+                    <a class="btn btn-sm btn-danger"
+                       th:href="@{/schedule/deleteschedule/{id}(id=${schedule.id})}">Удалить</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+<script>
+    function sortTable(n) {
+        let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.querySelector("table");
+        switching = true;
+        dir = "asc";
+        const arrows = document.querySelectorAll(".arrow");
+
+        while (switching) {
+            switching = false;
+            rows = table.rows;
+
+            for (i = 1; i < rows.length - 1; i++) {
+                shouldSwitch = false;
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+
+                if (dir == "asc") {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else if (dir == "desc") {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                switchcount++;
+            } else {
+                if (switchcount == 0 && dir == "asc") {
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+
+        for (let i = 0; i < arrows.length; i++) {
+            arrows[i].classList.remove("asc");
+            arrows[i].classList.remove("desc");
+        }
+
+        arrows[n].classList.add(dir);
+    }
+</script>
 </body>
 </html>

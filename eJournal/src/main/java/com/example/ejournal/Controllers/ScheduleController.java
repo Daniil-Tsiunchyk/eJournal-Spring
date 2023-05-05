@@ -1,7 +1,9 @@
 package com.example.ejournal.Controllers;
 
 import com.example.ejournal.Models.Schedule;
+import com.example.ejournal.Models.StudentGroup;
 import com.example.ejournal.Repositories.ScheduleRepository;
+import com.example.ejournal.Repositories.StudentGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,8 @@ public class ScheduleController {
 
     @Autowired
     private ScheduleRepository scheduleRepository;
+    @Autowired
+    private StudentGroupRepository studentGroupRepository;
 
     @GetMapping
     public String showSchedule(Model model) {
@@ -27,7 +31,9 @@ public class ScheduleController {
     }
 
     @GetMapping("/addschedule")
-    public String addSchedule() {
+    public String addSchedule(Model model) {
+        List<StudentGroup> studentGroups = studentGroupRepository.findAll();
+        model.addAttribute("studentGroups", studentGroups);
         return "/addschedule";
     }
 
