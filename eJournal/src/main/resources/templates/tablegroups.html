@@ -12,6 +12,7 @@
 <div class="main">
     <div class="container mt-5">
         <h1 class="text-center mb-4">Список групп</h1>
+        <a href="/newgroup" class="btn btn-primary mb-2">Добавить новую группу</a>
         <table class="table table-striped">
             <thead>
             <tr>
@@ -31,10 +32,10 @@
                         <input type="text" name="groupNumber" th:value="${group.groupNumber}"
                                class="form-control d-inline"
                                style="width: 100px;">
-                        <button type="submit" class="btn btn-primary">Edit</button>
+                        <button type="submit" class="btn btn-primary">Редактировать</button>
                     </form>
                     <form th:action="@{'/deleteGroup/' + ${group.id}}" method="post" class="d-inline">
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="submit" class="btn btn-danger">Удалить</button>
                     </form>
                 </td>
             </tr>

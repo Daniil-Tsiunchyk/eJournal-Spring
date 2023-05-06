@@ -27,14 +27,14 @@ public class ScheduleController {
     public String showSchedule(Model model) {
         List<Schedule> schedules = scheduleRepository.findAll();
         model.addAttribute("schedules", schedules);
-        return "schedule";
+        return "tableschedule";
     }
 
-    @GetMapping("/addschedule")
+    @GetMapping("/newschedule")
     public String addSchedule(Model model) {
         List<StudentGroup> studentGroups = studentGroupRepository.findAll();
         model.addAttribute("studentGroups", studentGroups);
-        return "/addschedule";
+        return "newschedule";
     }
 
 
