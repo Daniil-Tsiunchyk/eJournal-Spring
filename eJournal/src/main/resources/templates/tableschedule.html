@@ -17,12 +17,8 @@
         <table class="table">
             <thead>
             <tr>
-                <th onclick="sortTable(0)">Предмет <span class="arrow"></span></th>
-                <th onclick="sortTable(1)">Время <span class="arrow"></span></th>
-                <th onclick="sortTable(2)">День недели <span class="arrow"></span></th>
-                <th onclick="sortTable(3)">Группа <span class="arrow"></span></th>
-                <th onclick="sortTable(4)">Преподаватель <span class="arrow"></span></th>
-                <th>Действия</th>
+                <th>Время</th>
+                <th th:each="day : ${days}" th:text="${day}"></th>
             </tr>
             </thead>
             <tbody>
@@ -39,7 +35,6 @@
                 </td>
             </tr>
             </tbody>
-
         </table>
     </div>
 </div>

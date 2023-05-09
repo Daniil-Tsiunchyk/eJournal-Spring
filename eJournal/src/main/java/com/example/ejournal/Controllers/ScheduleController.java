@@ -27,7 +27,7 @@ public class ScheduleController {
     public String showSchedule(Model model) {
         List<Schedule> schedules = scheduleRepository.findAll();
         model.addAttribute("schedules", schedules);
-        List<String> days = Arrays.asList("Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье");
+        List<String> days = Arrays.asList("Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота");
         List<String> times = Arrays.asList("09:00", "10:35", "12:25", "14:00", "15:50", "17:25");
         model.addAttribute("days", days);
         model.addAttribute("times", times);

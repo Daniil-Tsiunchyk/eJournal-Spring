@@ -48,13 +48,6 @@ public class GroupController {
         return "newgroup";
     }
 
-//    @GetMapping("/tablegroups")
-//    public String showTableGroups(Model model) {
-//        List<StudentGroup> groups = studentGroupRepository.findAll();
-//        model.addAttribute("groups", groups);
-//        return "tablegroups";
-//    }
-
     @PostMapping("/deleteGroup/{id}")
     public String deleteGroup(@PathVariable Long id) {
         studentGroupRepository.deleteById(id);

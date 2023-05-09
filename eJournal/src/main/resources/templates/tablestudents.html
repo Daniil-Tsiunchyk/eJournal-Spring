@@ -30,19 +30,25 @@
                 <th scope="col">Email</th>
                 <th scope="col">Логин</th>
                 <th scope="col">Группа</th>
+                <th scope="col">Имя</th>
+                <th scope="col">Фамилия</th>
+                <th scope="col">Предмет</th>
                 <th scope="col">Действия</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="student : ${students}">
-                <th scope="row" th:text="${student.id}"></th>
-                <td th:text="${student.email}"></td>
-                <td th:text="${student.login}"></td>
-                <td th:text="${student.groupNumber}"></td>
+            <tr th:each="user : ${students}">
+                <th scope="row" th:text="${user.id}"></th>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.login}"></td>
+                <td th:text="${user.groupNumber}"></td>
+                <td th:text="${user.name}"></td>
+                <td th:text="${user.surname}"></td>
+                <td th:text="${user.subject}"></td>
                 <td>
-                    <a class="btn btn-primary btn-sm" th:href="@{/editUser/{id}(id=${student.id})}" role="button">Редактировать</a>
+                    <a class="btn btn-primary btn-sm" th:href="@{/editUser/{id}(id=${user.id})}" role="button">Редактировать</a>
                     <form method="post" th:action="@{/deleteUser}" class="d-inline">
-                        <input type="hidden" name="userId" th:value="${student.id}">
+                        <input type="hidden" name="userId" th:value="${user.id}">
                         <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
                     </form>
                 </td>
