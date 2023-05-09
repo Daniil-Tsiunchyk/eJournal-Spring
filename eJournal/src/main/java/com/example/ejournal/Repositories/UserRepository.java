@@ -13,7 +13,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Query("SELECT COUNT(u) FROM User u WHERE u.groupNumber = :group_number")
     Integer countUsersByGroupNumber(@Param("group_number") String group_number);
 
-    List<User> findByGroupNumberAndRole(String groupNumber, String role);
+    List<User> findAllByRole(String role);
+    List<User> findAllByRoleAndGroupNumber(String role, String groupNumber);
 
-    List<User> findByRole(String role);
 }

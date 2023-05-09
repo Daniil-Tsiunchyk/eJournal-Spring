@@ -20,7 +20,7 @@ public class EditUserController {
     public String showEditUserForm(@PathVariable("id") Long id, Model model) {
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id: " + id));
         model.addAttribute("user", user);
-        return "edituser";
+        return "edit-user";
     }
 
     @PostMapping("/updateUser")

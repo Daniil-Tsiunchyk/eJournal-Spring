@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 @Controller
 @RequestMapping("/")
 public class AuthorisationController {
@@ -29,7 +28,7 @@ public class AuthorisationController {
             case "STUDENT":
                 return "redirect:/student-schedule?userId=" + user.getId();
             case "TEACHER":
-                return "redirect:/";
+                return "redirect:/teacher-schedule?userId=" + user.getId();
             case "DEAN":
                 return "redirect:/tableschedule";
             default:
@@ -43,4 +42,3 @@ public class AuthorisationController {
         return "authorisation";
     }
 }
-

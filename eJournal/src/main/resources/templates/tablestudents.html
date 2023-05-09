@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,46 +11,52 @@
 <body>
 <div th:insert="blocks/sidebar :: sidebar"></div>
 <div class="main">
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Студенты</h1>
-        <a href="/newuser" class="btn btn-primary mb-2">Добавить нового студента</a>
-        <div class="mb-3">
-            <label for="group" class="form-label">Выберите группу</label>
-            <select class="form-select" id="group" name="group" onchange="location = this.value;">
-                <option selected disabled>Выберите группу</option>
-                <th:block th:each="group : ${groups}">
-                    <option th:value="'/tablestudents/' + ${group.groupNumber}" th:text="${group.groupNumber}"></option>
-                </th:block>
-            </select>
-        </div>
-        <table class="table table-striped">
+    <div class="container">
+        <h1 class="my-3">Список студентов</h1>
+
+        <form method="get" action="/tablestudents">
+            <div class="form-group">
+                <label for="groupNumber">Выберите группу:</label>
+                <select id="groupNumber" name="groupNumber" class="form-control">
+                    <option value="">Все группы</option>
+                    <option th:each="group : ${groups}" th:value="${group.groupNumber}"
+                            th:text="${group.groupNumber}"></option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Применить фильтр</button>
+        </form>
+
+        <table class="table table-striped my-3">
             <thead>
             <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Email</th>
-                <th scope="col">Логин</th>
-                <th scope="col">Группа</th>
-                <th scope="col">Имя</th>
-                <th scope="col">Фамилия</th>
-                <th scope="col">Предмет</th>
-                <th scope="col">Действия</th>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Логин</th>
+                <th>Роль</th>
+                <th>Дата создания</th>
+                <th>Статус</th>
+                <th>Номер группы</th>
+                <th>Имя</th>
+                <th>Фамилия</th>
+                <th>Предмет</th>
+                <th>Действия</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="user : ${students}">
-                <th scope="row" th:text="${user.id}"></th>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}"></td>
                 <td th:text="${user.email}"></td>
                 <td th:text="${user.login}"></td>
+                <td th:text="${user.role}"></td>
+                <td th:text="${user.creationDate}"></td>
+                <td th:text="${user.status}"></td>
                 <td th:text="${user.groupNumber}"></td>
                 <td th:text="${user.name}"></td>
                 <td th:text="${user.surname}"></td>
                 <td th:text="${user.subject}"></td>
                 <td>
-                    <a class="btn btn-primary btn-sm" th:href="@{/editUser/{id}(id=${user.id})}" role="button">Редактировать</a>
-                    <form method="post" th:action="@{/deleteUser}" class="d-inline">
-                        <input type="hidden" name="userId" th:value="${user.id}">
-                        <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
-                    </form>
+                    <a th:href="@{'/edit-user/' + ${user.id}}" class="btn btn-sm btn-primary">Редактировать</a>
+                    <a th:href="@{'/delete-user/' + ${user.id}}" class="btn btn-sm btn-danger">Удалить</a>
                 </td>
             </tr>
             </tbody>
