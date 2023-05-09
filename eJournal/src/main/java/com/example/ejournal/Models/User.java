@@ -19,15 +19,44 @@ public class User {
 
     @Column(nullable = false)
     private String password;
-
-    @Column(nullable = false)
+    @Column
     private String role;
-    @Column(nullable = false)
+    @Column
     private LocalDateTime creationDate;
-    @Column(nullable = false)
+    @Column
     private String status;
-    @Column(nullable = false)
+    @Column
     private String groupNumber;
+    @Column
+    private String name;
+    @Column
+    private String surname;
+    @Column
+    private String subject;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
 
     public String getGroupNumber() {
         return groupNumber;

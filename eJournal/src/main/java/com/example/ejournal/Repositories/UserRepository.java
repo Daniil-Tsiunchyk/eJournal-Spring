@@ -9,10 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends CrudRepository<User, Long> {
-    Optional<User> findByEmailAndPassword(String email, String password);
-
+    User findByEmailAndPassword(String email, String password);
     @Query("SELECT COUNT(u) FROM User u WHERE u.groupNumber = :group_number")
     Integer countUsersByGroupNumber(@Param("group_number") String group_number);
     List<User> findByGroupNumberAndRole(String groupNumber, String role);
-
 }
