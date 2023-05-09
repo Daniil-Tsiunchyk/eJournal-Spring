@@ -26,19 +26,20 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="schedule : ${schedules}">
-                <td th:text="${schedule.subject}"></td>
-                <td th:text="${schedule.time}"></td>
-                <td th:text="${schedule.dayOfWeek}"></td>
-                <td th:text="${schedule.groupNumber}"></td>
-                <td th:text="${schedule.teacherName}"></td>
-                <td>
-                    <a class="btn btn-sm btn-primary" th:href="@{/schedule/editschedule/{id}(id=${schedule.id})}">Редактировать</a>
-                    <a class="btn btn-sm btn-danger"
-                       th:href="@{/schedule/deleteschedule/{id}(id=${schedule.id})}">Удалить</a>
+            <tr th:each="time : ${times}">
+                <th th:text="${time}"></th>
+                <td th:each="day : ${days}">
+                    <div th:each="schedule : ${schedules}" th:if="${schedule.dayOfWeek} == ${day} and ${schedule.time} == ${time}">
+                        <div th:text="${schedule.subject}"></div>
+                        <div th:text="${schedule.groupNumber}"></div>
+                        <div th:text="${schedule.teacherName}"></div>
+                        <a class="btn btn-sm btn-primary" th:href="@{/schedule/editschedule/{id}(id=${schedule.id})}">Редактировать</a>
+                        <a class="btn btn-sm btn-danger" th:href="@{/schedule/deleteschedule/{id}(id=${schedule.id})}">Удалить</a>
+                    </div>
                 </td>
             </tr>
             </tbody>
+
         </table>
     </div>
 </div>

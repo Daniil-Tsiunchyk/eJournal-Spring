@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -22,13 +23,17 @@ public class ScheduleController {
     private ScheduleRepository scheduleRepository;
     @Autowired
     private StudentGroupRepository studentGroupRepository;
-
     @GetMapping
     public String showSchedule(Model model) {
         List<Schedule> schedules = scheduleRepository.findAll();
         model.addAttribute("schedules", schedules);
+        List<String> days = Arrays.asList("Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье");
+        List<String> times = Arrays.asList("09:00", "10:35", "12:25", "14:00", "15:50", "17:25");
+        model.addAttribute("days", days);
+        model.addAttribute("times", times);
         return "tableschedule";
     }
+
 
     @GetMapping("/newschedule")
     public String addSchedule(Model model) {
