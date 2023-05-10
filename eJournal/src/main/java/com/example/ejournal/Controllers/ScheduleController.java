@@ -2,15 +2,14 @@ package com.example.ejournal.Controllers;
 
 import com.example.ejournal.Models.Schedule;
 import com.example.ejournal.Models.StudentGroup;
+import com.example.ejournal.Models.User;
 import com.example.ejournal.Repositories.ScheduleRepository;
 import com.example.ejournal.Repositories.StudentGroupRepository;
+import com.example.ejournal.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,8 +20,13 @@ public class ScheduleController {
 
     @Autowired
     private ScheduleRepository scheduleRepository;
+
     @Autowired
     private StudentGroupRepository studentGroupRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping
     public String showSchedule(Model model) {
         List<Schedule> schedules = scheduleRepository.findAll();
@@ -67,5 +71,16 @@ public class ScheduleController {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid schedule Id:" + id));
         scheduleRepository.delete(schedule);
         return "redirect:/schedule";
+    }
+
+    @GetMapping("/teacher-schedule")
+    public String showTeacherSchedule(@RequestParam int userId, Model model) {
+        User teacher = userRepository.findById((long) userId).orElse(null);
+        if (teacher != null) {
+            model.addAttribute("userId", userId);
+            List<Schedule> teacherSchedule = scheduleRepository.findByTeacherName(teacher.getName() + " " + teacher.getSurname());
+            model.addAttribute("teacherSchedule", teacherSchedule);
+        }
+        return "teacher-schedule";
     }
 }

@@ -14,6 +14,9 @@ public interface UserRepository extends CrudRepository<User, Long> {
     Integer countUsersByGroupNumber(@Param("group_number") String group_number);
 
     List<User> findAllByRole(String role);
+
     List<User> findAllByRoleAndGroupNumber(String role, String groupNumber);
+
+    List<User> findByRole(String role);
 
 }

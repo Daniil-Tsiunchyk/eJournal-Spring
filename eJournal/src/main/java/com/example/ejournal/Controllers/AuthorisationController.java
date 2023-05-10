@@ -25,15 +25,19 @@ public class AuthorisationController {
         }
 
         switch (user.getRole()) {
-            case "STUDENT":
+            case "STUDENT" -> {
                 return "redirect:/student-schedule?userId=" + user.getId();
-            case "TEACHER":
+            }
+            case "TEACHER" -> {
                 return "redirect:/teacher-schedule?userId=" + user.getId();
-            case "DEAN":
-                return "redirect:/tableschedule";
-            default:
+            }
+            case "DEAN" -> {
+                return "redirect:/schedule";
+            }
+            default -> {
                 model.addAttribute("error", "Неизвестная роль");
                 return "authorisation";
+            }
         }
     }
 

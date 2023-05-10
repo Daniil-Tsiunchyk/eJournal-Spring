@@ -1,15 +1,12 @@
 package com.example.ejournal.Controllers;
 
-import com.example.ejournal.Models.Absenteeism;
-import com.example.ejournal.Models.Mark;
-import com.example.ejournal.Models.StudentGroup;
-import com.example.ejournal.Repositories.AbsenteeismRepository;
-import com.example.ejournal.Repositories.MarkRepository;
-import com.example.ejournal.Repositories.StudentGroupRepository;
+import com.example.ejournal.Models.*;
+import com.example.ejournal.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -25,6 +22,40 @@ public class AbsenteeismController {
 
     @Autowired
     private AbsenteeismRepository absenteeismRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ScheduleRepository scheduleRepository;
+
+    @GetMapping("/setmark")
+    public String setMarkPage(Model model) {
+        List<Schedule> schedules = scheduleRepository.findAll();
+        List<User> students = userRepository.findByRole("student");
+        model.addAttribute("schedules", schedules);
+        model.addAttribute("students", students);
+        return "setmark";
+    }
+
+    @PostMapping("/setmark")
+    public String setMark(@RequestParam Long schedule, @RequestParam Long student, @RequestParam double mark) {
+        Schedule selectedSchedule = scheduleRepository.findById(schedule).orElse(null);
+        User selectedStudent = userRepository.findById(student).orElse(null);
+
+        if (selectedSchedule != null && selectedStudent != null) {
+            Mark newMark = new Mark();
+            newMark.setSubject(selectedSchedule.getSubject());
+            newMark.setTime(selectedSchedule.getTime());
+            newMark.setDate(selectedSchedule.getDayOfWeek());
+            newMark.setUserId(selectedStudent.getId().intValue());
+            newMark.setMark(mark);
+
+            markRepository.save(newMark);
+        }
+
+        return "redirect:/setmark";
+    }
 
     @GetMapping("/tableabsenteeism")
     public String showStudentTable(Model model) {

@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Выставить оценку</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выставление оценок</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/styles.css}"/>
     <link rel="stylesheet" th:href="@{/css/yaklass.css}"/>
@@ -14,6 +15,33 @@
     <a th:href="@{/setmark(userId=${userId})}">Выставить оценку</a>
     <a th:href="@{/setabsenteeism(userId=${userId})}">Записать прогул</a>
     <a href="/">Выйти</a>
+</div>
+<div class="main">
+    <div class="container">
+        <h1 class="my-3">Выставление оценок</h1>
+
+        <form method="post" th:action="@{/setmark}">
+            <div class="form-group">
+                <label for="schedule">Выберите занятие:</label>
+                <select id="schedule" name="schedule" class="form-control" required>
+                    <option th:each="schedule : ${schedules}" th:value="${schedule.id}"
+                            th:text="${schedule.subject} + ' | ' + ${schedule.groupNumber} + ' | ' + ${schedule.dayOfWeek} + ' | ' + ${schedule.time}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="student">Выберите студента:</label>
+                <select id="student" name="student" class="form-control" required>
+                    <option th:each="student : ${students}" th:value="${student.id}"
+                            th:text="${student.name} + ' ' + ${student.surname} + ' (' + ${student.groupNumber} + ')'"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="mark">Оценка:</label>
+                <input type="number" class="form-control" id="mark" name="mark" step="0.1" min="1" max="10" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Выставить оценку</button>
+        </form>
+    </div>
 </div>
 </body>
 </html>

@@ -92,6 +92,8 @@ public class UserController {
                            @RequestParam("login") String login,
                            @RequestParam("group") Long groupId,
                            @RequestParam("role") String role,
+                           @RequestParam("name") String name, // Add this line
+                           @RequestParam("surname") String surname, // Add this line
                            RedirectAttributes redirectAttributes) {
 
         StudentGroup group = studentGroupRepository.findById(groupId).orElse(null);
@@ -103,6 +105,8 @@ public class UserController {
         newUser.setRole(role);
         newUser.setCreationDate(LocalDateTime.now());
         newUser.setStatus("Active");
+        newUser.setName(name);
+        newUser.setSurname(surname);
         if (group != null) {
             newUser.setGroupNumber(group.getGroupNumber());
         }
@@ -112,6 +116,7 @@ public class UserController {
 
         return "redirect:/newuser";
     }
+
 
     @GetMapping("/student-schedule")
     public String getStudentSchedule(@RequestParam("userId") int userId, Model model) {
