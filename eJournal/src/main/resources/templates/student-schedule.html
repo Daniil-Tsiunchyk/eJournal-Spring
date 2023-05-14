@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,7 +18,7 @@
 </div>
 <div class="main">
     <div class="container mt-4">
-        <h1 class="text-center mb-4">Расписание студента</h1>
+        <h1 class="text-center mb-4">Расписание группы</h1>
         <table class="table">
             <thead>
             <tr>
@@ -30,7 +30,8 @@
             <tr th:each="time : ${times}">
                 <th th:text="${time}"></th>
                 <td th:each="day : ${days}">
-                    <div th:each="schedule : ${studentSchedules}" th:if="${schedule.dayOfWeek} == ${day} and ${schedule.time} == ${time}">
+                    <div th:each="schedule : ${groupSchedules}"
+                         th:if="${schedule.dayOfWeek} == ${day} and ${schedule.time} == ${time}">
                         <div th:text="${schedule.subject}"></div>
                         <div th:text="${schedule.groupNumber}"></div>
                         <div th:text="${schedule.teacherName}"></div>

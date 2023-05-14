@@ -17,10 +17,14 @@ public class AuthorisationController {
     private UserRepository userRepository;
 
     @PostMapping("/login")
-    public String loginUser(@RequestParam String email, @RequestParam String password, Model model) {
-        User user = userRepository.findByEmailAndPassword(email, password);
+    public String loginUser(@RequestParam String identifier, @RequestParam String password, Model model) {
+        User user = userRepository.findByEmailAndPassword(identifier, password);
         if (user == null) {
-            model.addAttribute("error", "Неверный адрес электронной почты или пароль");
+            user = userRepository.findByLoginAndPassword(identifier, password);
+        }
+
+        if (user == null) {
+            model.addAttribute("error", "Неверный адрес электронной почты, логин или пароль");
             return "authorisation";
         }
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/schedule")
@@ -75,12 +76,16 @@ public class ScheduleController {
 
     @GetMapping("/teacher-schedule")
     public String showTeacherSchedule(@RequestParam int userId, Model model) {
-        User teacher = userRepository.findById((long) userId).orElse(null);
-        if (teacher != null) {
-            model.addAttribute("userId", userId);
-            List<Schedule> teacherSchedule = scheduleRepository.findByTeacherName(teacher.getName() + " " + teacher.getSurname());
-            model.addAttribute("teacherSchedule", teacherSchedule);
+        Optional<User> teacherOpt = userRepository.findById((long) userId);
+        if (!teacherOpt.isPresent()) {
+            model.addAttribute("error", "Пользователь с id " + userId + " не найден");
+            return "authorisation";
         }
+        User teacher = teacherOpt.get();
+        model.addAttribute("userId", userId);
+        List<Schedule> teacherSchedule = scheduleRepository.findByTeacherName(teacher.getName() + " " + teacher.getSurname());
+        model.addAttribute("teacherSchedule", teacherSchedule);
         return "teacher-schedule";
     }
+
 }

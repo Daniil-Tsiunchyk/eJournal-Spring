@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface MarkRepository extends JpaRepository<Mark, Long> {
     List<Mark> findByUserId(int userId);
+    List<Mark> findBySubjectAndUserId(String subject, int userId);
+
 }

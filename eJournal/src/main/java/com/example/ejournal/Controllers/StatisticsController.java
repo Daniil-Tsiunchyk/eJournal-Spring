@@ -1,15 +1,15 @@
 package com.example.ejournal.Controllers;
 
-import com.example.ejournal.Models.Absenteeism;
-import com.example.ejournal.Models.Mark;
-import com.example.ejournal.Models.Statistics;
+import com.example.ejournal.Models.*;
 import com.example.ejournal.Repositories.AbsenteeismRepository;
 import com.example.ejournal.Repositories.MarkRepository;
+import com.example.ejournal.Repositories.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +24,31 @@ public class StatisticsController {
 
     @Autowired
     private AbsenteeismRepository absenteeismRepository;
+
+    @Autowired
+    private ScheduleRepository scheduleRepository;
+
+    @RequestMapping("/statistics")
+    public String getStatistics(Model model) {
+        List<GroupStatistics> groupStatisticsList = new ArrayList<>();
+        List<Schedule> schedules = scheduleRepository.findAll();
+        for (Schedule schedule : schedules) {
+            GroupStatistics groupStatistics = new GroupStatistics();
+            groupStatistics.setGroupNumber(schedule.getGroupNumber());
+            groupStatistics.setSubject(schedule.getSubject());
+
+            List<Mark> marks = markRepository.findBySubjectAndUserId(schedule.getSubject(), Math.toIntExact(schedule.getId()));
+            double averageMark = marks.stream().mapToDouble(Mark::getMark).average().orElse(0);
+            groupStatistics.setAverageMark(averageMark);
+
+            List<Absenteeism> absenteeisms = absenteeismRepository.findBySubjectAndUserId(schedule.getSubject(), Math.toIntExact(schedule.getId()));
+            groupStatistics.setAbsenteeisms(absenteeisms.size());
+            groupStatisticsList.add(groupStatistics);
+        }
+
+        model.addAttribute("groupStatistics", groupStatisticsList);
+        return "statistics";
+    }
 
     @GetMapping("/student-statistics/{userId}")
     public String getStatistics(@PathVariable("userId") int userId, Model model) {
@@ -67,6 +92,6 @@ public class StatisticsController {
 
         model.addAttribute("userId", userId);
         model.addAttribute("statistics", statisticsList);
-        return "statistics";
+        return "tablestatistics";
     }
 }

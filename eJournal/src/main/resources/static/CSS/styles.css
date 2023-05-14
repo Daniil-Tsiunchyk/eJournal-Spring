@@ -102,7 +102,20 @@ body {
     align-items: center;
     margin-top: 10px;
 }
+
 .center-form {
     max-width: 600px;
     margin: 0 auto;
+}
+
+body {
+    padding-top: 50px;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
 }
