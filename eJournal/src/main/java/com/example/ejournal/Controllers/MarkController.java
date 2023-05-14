@@ -29,11 +29,12 @@ public class MarkController {
     private ScheduleRepository scheduleRepository;
 
     @GetMapping("/setmark")
-    public String setMarkPage(Model model) {
+    public String setMarkPage(@RequestParam("userId") Long userId, Model model) {
         List<Schedule> schedules = scheduleRepository.findAll();
         List<User> students = userRepository.findByRole("student");
         model.addAttribute("schedules", schedules);
         model.addAttribute("students", students);
+        model.addAttribute("userId", userId);
         return "setmark";
     }
 

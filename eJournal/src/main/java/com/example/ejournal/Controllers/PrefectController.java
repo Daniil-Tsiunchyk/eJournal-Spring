@@ -1,11 +1,9 @@
 package com.example.ejournal.Controllers;
 
 import com.example.ejournal.Models.Absenteeism;
-import com.example.ejournal.Models.Mark;
 import com.example.ejournal.Models.Schedule;
 import com.example.ejournal.Models.User;
 import com.example.ejournal.Repositories.AbsenteeismRepository;
-import com.example.ejournal.Repositories.MarkRepository;
 import com.example.ejournal.Repositories.ScheduleRepository;
 import com.example.ejournal.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,35 +27,32 @@ public class PrefectController {
     @Autowired
     private AbsenteeismRepository absenteeismRepository;
 
-    @GetMapping
-    public String showTeacherSchedule(@RequestParam("userId") Integer userId, Model model) {
-        if (userId == null) {
-            return "redirect:/";
-        }
-
-        User user = userRepository.findById(Long.valueOf(userId)).orElse(null);
+    @GetMapping("/teacher-schedule")
+    public String getTeacherSchedule(@RequestParam("userId") Long userId, Model model) {
+        User user = userRepository.findById(userId).orElse(null);
 
         if (user == null || !user.getRole().equals("TEACHER")) {
             return "redirect:/";
         }
 
-        List<Schedule> schedule = scheduleRepository.findByTeacherName(user.getName());
-        model.addAttribute("schedule", schedule);
+        List<Schedule> teacherSchedules = scheduleRepository.findByTeacherName(user.getName());
+
+        model.addAttribute("schedules", teacherSchedules);
         model.addAttribute("userId", userId);
+
         return "teacher-schedule";
     }
 
 
-
     @GetMapping("/setabsenteeism")
-    public String setAbsenteeismPage(Model model) {
+    public String setAbsenteeismPage(@RequestParam("userId") Long userId, Model model) {
         List<Schedule> schedules = scheduleRepository.findAll();
         List<User> students = userRepository.findByRole("student");
         model.addAttribute("schedules", schedules);
         model.addAttribute("students", students);
+        model.addAttribute("userId", userId);
         return "setabsenteeism";
     }
-
 
     @PostMapping("/setabsenteeism")
     public String setAbsenteeism(@RequestParam Long schedule, @RequestParam Long student) {

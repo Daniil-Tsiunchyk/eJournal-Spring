@@ -108,16 +108,16 @@ public class UserController {
     public String getStudentSchedule(@RequestParam("userId") int userId, Model model) {
         User student = userRepository.findById((long) userId).orElse(null);
         if (student == null) {
+            return "redirect:/authorisation";
         }
-
         assert student != null;
-        List<Schedule> studentSchedules = scheduleRepository.findByGroupNumber(student.getGroupNumber());
+        List<Schedule> groupSchedules = scheduleRepository.findByGroupNumber(student.getGroupNumber());
 
         List<String> days = Arrays.asList("Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота");
         List<String> times = Arrays.asList("9:00-10:20", "10:35-11:55", "12:25-13:45", "14:00-15:20", "15:50-17:10");
         model.addAttribute("days", days);
         model.addAttribute("times", times);
-        model.addAttribute("studentSchedules", studentSchedules);
+        model.addAttribute("groupSchedules", groupSchedules);
         model.addAttribute("userId", userId);
         return "student-schedule";
     }
