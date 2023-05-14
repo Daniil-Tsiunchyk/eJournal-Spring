@@ -29,20 +29,6 @@ public class UserController {
     @Autowired
     private ScheduleRepository scheduleRepository;
 
-    @GetMapping("/tablestudents")
-    public String showTableStudents(@RequestParam(required = false) String groupNumber, Model model) {
-        List<User> users;
-        if (groupNumber == null || groupNumber.isEmpty()) {
-            users = userRepository.findAllByRole("STUDENT");
-        } else {
-            users = userRepository.findAllByRoleAndGroupNumber("STUDENT", groupNumber);
-        }
-        List<StudentGroup> groups = studentGroupRepository.findAll();
-
-        model.addAttribute("users", users);
-        model.addAttribute("groups", groups);
-        return "tablestudents";
-    }
 
     @GetMapping("/edit-user/{id}")
     public String editUser(@PathVariable Long id, Model model) {
@@ -124,6 +110,7 @@ public class UserController {
         if (student == null) {
         }
 
+        assert student != null;
         List<Schedule> studentSchedules = scheduleRepository.findByGroupNumber(student.getGroupNumber());
 
         List<String> days = Arrays.asList("Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота");
@@ -134,5 +121,29 @@ public class UserController {
         model.addAttribute("userId", userId);
         return "student-schedule";
     }
+
+    @GetMapping("/tablestudents")
+    public String showTableStudents(@RequestParam(required = false) String groupNumber,
+                                    @RequestParam(required = false) String role,
+                                    Model model) {
+        List<User> users;
+        if ((groupNumber == null || groupNumber.isEmpty()) && (role == null || role.isEmpty())) {
+            users = (List<User>) userRepository.findAll();
+        } else if (role == null || role.isEmpty()) {
+            users = userRepository.findAllByGroupNumber(groupNumber);
+        } else if (groupNumber == null || groupNumber.isEmpty()) {
+            users = userRepository.findAllByRole(role);
+        } else {
+            users = userRepository.findAllByRoleAndGroupNumber(role, groupNumber);
+        }
+
+        List<StudentGroup> groups = studentGroupRepository.findAll();
+
+        model.addAttribute("users", users);
+        model.addAttribute("groups", groups);
+        return "tablestudents";
+    }
+
+
 }
 //привет марсианам

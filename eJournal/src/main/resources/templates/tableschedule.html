@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Расписание</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/styles.css}"/>
-    <link rel="stylesheet" th:href="@{/css/yaklass.css}"/>
 </head>
 <body>
 <div th:insert="blocks/sidebar :: sidebar"></div>
@@ -25,12 +23,17 @@
             <tr th:each="time : ${times}">
                 <th th:text="${time}"></th>
                 <td th:each="day : ${days}">
-                    <div th:each="schedule : ${schedules}" th:if="${schedule.dayOfWeek} == ${day} and ${schedule.time} == ${time}">
+                    <div th:each="schedule : ${schedules}"
+                         th:if="${schedule.dayOfWeek} == ${day} and ${schedule.time} == ${time}">
                         <div th:text="${schedule.subject}"></div>
                         <div th:text="${schedule.groupNumber}"></div>
                         <div th:text="${schedule.teacherName}"></div>
-                        <a class="btn btn-sm btn-primary" th:href="@{/schedule/editschedule/{id}(id=${schedule.id})}">Редактировать</a>
-                        <a class="btn btn-sm btn-danger" th:href="@{/schedule/deleteschedule/{id}(id=${schedule.id})}">Удалить</a>
+                        <div class="btn-group">
+                            <a class="btn btn-sm btn-primary"
+                               th:href="@{/schedule/editschedule/{id}(id=${schedule.id})}">Редактировать</a>
+                            <a class="btn btn-sm btn-danger"
+                               th:href="@{/schedule/deleteschedule/{id}(id=${schedule.id})}">Удалить</a>
+                        </div>
                     </div>
                 </td>
             </tr>
@@ -38,55 +41,5 @@
         </table>
     </div>
 </div>
-<script>
-    function sortTable(n) {
-        let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-        table = document.querySelector("table");
-        switching = true;
-        dir = "asc";
-        const arrows = document.querySelectorAll(".arrow");
-
-        while (switching) {
-            switching = false;
-            rows = table.rows;
-
-            for (i = 1; i < rows.length - 1; i++) {
-                shouldSwitch = false;
-                x = rows[i].getElementsByTagName("TD")[n];
-                y = rows[i + 1].getElementsByTagName("TD")[n];
-
-                if (dir == "asc") {
-                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                        shouldSwitch = true;
-                        break;
-                    }
-                } else if (dir == "desc") {
-                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-                        shouldSwitch = true;
-                        break;
-                    }
-                }
-            }
-
-            if (shouldSwitch) {
-                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                switching = true;
-                switchcount++;
-            } else {
-                if (switchcount == 0 && dir == "asc") {
-                    dir = "desc";
-                    switching = true;
-                }
-            }
-        }
-
-        for (let i = 0; i < arrows.length; i++) {
-            arrows[i].classList.remove("asc");
-            arrows[i].classList.remove("desc");
-        }
-
-        arrows[n].classList.add(dir);
-    }
-</script>
 </body>
 </html>

@@ -19,4 +19,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     List<User> findByRole(String role);
 
+    List<User> findAllByGroupNumber(String groupNumber);
+
+
 }

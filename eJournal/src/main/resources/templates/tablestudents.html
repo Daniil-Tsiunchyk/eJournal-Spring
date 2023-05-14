@@ -6,7 +6,6 @@
     <title>Студенты</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/styles.css}"/>
-    <link rel="stylesheet" th:href="@{/css/yaklass.css}"/>
 </head>
 <body>
 <div th:insert="blocks/sidebar :: sidebar"></div>
@@ -21,6 +20,15 @@
                     <option value="">Все группы</option>
                     <option th:each="group : ${groups}" th:value="${group.groupNumber}"
                             th:text="${group.groupNumber}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="role">Выберите роль:</label>
+                <select id="role" name="role" class="form-control">
+                    <option value="">Все роли</option>
+                    <option value="DEAN">Декан</option>
+                    <option value="STUDENT">Студент</option>
+                    <option value="TEACHER">Преподаватель</option>
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">Применить фильтр</button>
@@ -43,8 +51,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="user : ${users}">
-                <td th:text="${user.id}"></td>
+            <tr th:each="user, stat : ${users}">
+                <td th:text="${stat.count}"></td>
                 <td th:text="${user.email}"></td>
                 <td th:text="${user.login}"></td>
                 <td th:text="${user.role}"></td>
