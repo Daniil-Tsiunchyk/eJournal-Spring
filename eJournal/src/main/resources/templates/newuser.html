@@ -11,6 +11,12 @@
 <body>
 <div th:insert="blocks/sidebar :: sidebar"></div>
 <div class="center-form">
+    <div th:if="${user_info != null}" class="alert alert-success" role="alert">
+        Пользователь создан с ID: <span th:text="${user_info.id}"></span>,
+        Имя: <span th:text="${user_info.name}"></span>,
+        Фамилия: <span th:text="${user_info.surname}"></span>.
+    </div>
+    <br>
     <h1 class="text-center mb-4">Создание нового пользователя</h1>
     <form th:action="@{/saveUser}" method="post">
         <div class="mb-3">
@@ -24,7 +30,6 @@
         <div class="mb-3">
             <label for="group" class="form-label">Группа</label>
             <select class="form-select" id="group" name="group" required>
-                <option selected disabled>Выберите группу</option>
                 <th:block th:each="group : ${groups}">
                     <option th:value="${group.id}" th:text="${group.groupNumber}"></option>
                 </th:block>
@@ -54,6 +59,7 @@
             <button type="submit" class="btn btn-primary">Добавить</button>
         </div>
     </form>
+
 </div>
 </body>
 </html>
