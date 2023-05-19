@@ -18,8 +18,25 @@
 <div class="main">
     <div class="container mt-4">
         <h1 class="text-center mb-4">Прогулы</h1>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Предмет</th>
+                <th scope="col">Время</th>
+                <th scope="col">Дата</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="absenteeism : ${absenteeisms}">
+                <td th:text="${absenteeism.subject}"></td>
+                <td th:text="${absenteeism.time}"></td>
+                <td th:text="${absenteeism.date}"></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
+
 </body>
 </html>
 

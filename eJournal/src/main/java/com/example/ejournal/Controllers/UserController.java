@@ -111,14 +111,17 @@ public class UserController {
             return "redirect:/authorisation";
         }
         assert student != null;
+        System.out.println("Group number for student with id " + userId + ": " + student.getGroupNumber());
+
         List<Schedule> groupSchedules = scheduleRepository.findByGroupNumber(student.getGroupNumber());
 
         List<String> days = Arrays.asList("Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота");
-        List<String> times = Arrays.asList("9:00-10:20", "10:35-11:55", "12:25-13:45", "14:00-15:20", "15:50-17:10");
+        List<String> times = Arrays.asList("09:00", "10:35", "12:25", "14:00", "15:50");
         model.addAttribute("days", days);
         model.addAttribute("times", times);
         model.addAttribute("groupSchedules", groupSchedules);
         model.addAttribute("userId", userId);
+        System.out.println("Schedules for group " + student.getGroupNumber() + ": " + groupSchedules);
         return "student-schedule";
     }
 
