@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 @Controller
 public class PrefectController {
 
@@ -43,7 +45,6 @@ public class PrefectController {
         return "teacher-schedule";
     }
 
-
     @GetMapping("/setabsenteeism")
     public String setAbsenteeismPage(@RequestParam("userId") Long userId, Model model) {
         List<Schedule> schedules = scheduleRepository.findAll();
@@ -55,7 +56,7 @@ public class PrefectController {
     }
 
     @PostMapping("/setabsenteeism")
-    public String setAbsenteeism(@RequestParam Long schedule, @RequestParam Long student) {
+    public String setAbsenteeism(@RequestParam Long schedule, @RequestParam Long student, @RequestParam("userId") Long userId, RedirectAttributes redirectAttributes) {
         Schedule selectedSchedule = scheduleRepository.findById(schedule).orElse(null);
         User selectedStudent = userRepository.findById(student).orElse(null);
 
@@ -67,9 +68,11 @@ public class PrefectController {
             newAbsenteeism.setUserId(selectedStudent.getId().intValue());
 
             absenteeismRepository.save(newAbsenteeism);
+            redirectAttributes.addFlashAttribute("success", "Прогул успешно записан для студента " + selectedStudent.getName() + " " + selectedStudent.getSurname());
         }
 
-        return "redirect:/setabsenteeism";
+        return "redirect:/setabsenteeism?userId=" + userId;
     }
+
 
 }

@@ -17,10 +17,17 @@
     <a href="/">Выйти</a>
 </div>
 <div class="main">
+
     <div class="container">
         <h1 class="my-3">Выставление оценок</h1>
 
+        <th:block th:if="${success}">
+            <div class="alert alert-success" role="alert">
+                <p th:text="${success}">УРАААА! ЗАРАБОТАЛО!</p>
+            </div>
+        </th:block>
         <form method="post" th:action="@{/setmark}">
+            <input type="hidden" name="userId" th:value="${userId}"/>
             <div class="form-group">
                 <label for="schedule">Выберите занятие:</label>
                 <select id="schedule" name="schedule" class="form-control" required>

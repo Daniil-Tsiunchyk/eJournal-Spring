@@ -19,6 +19,12 @@
     <div class="container">
         <h1 class="my-3">Записать прогул</h1>
 
+        <th:block th:if="${success}">
+            <div class="alert alert-success" role="alert">
+                <p th:text="${success}">Успех</p>
+            </div>
+        </th:block>
+
         <form method="post" th:action="@{/setabsenteeism}">
             <div class="form-group">
                 <label for="schedule">Выберите занятие:</label>
@@ -34,7 +40,7 @@
                             th:text="${student.name} + ' ' + ${student.surname} + ' (' + ${student.groupNumber} + ')'"></option>
                 </select>
             </div>
-            <input type="hidden" name="userId" th:value="${userId}" />
+            <input type="hidden" name="userId" th:value="${userId}"/>
             <br>
             <button type="submit" class="btn btn-primary">Записать прогул</button>
         </form>

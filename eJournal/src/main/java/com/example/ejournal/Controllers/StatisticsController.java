@@ -30,25 +30,36 @@ public class StatisticsController {
 
     @RequestMapping("/statistics")
     public String getStatistics(Model model) {
-        List<GroupStatistics> groupStatisticsList = new ArrayList<>();
+        Map<String, GroupStatistics> groupStatisticsMap = new HashMap<>();
+
         List<Schedule> schedules = scheduleRepository.findAll();
         for (Schedule schedule : schedules) {
-            GroupStatistics groupStatistics = new GroupStatistics();
+            String key = schedule.getGroupNumber() + "-" + schedule.getSubject();
+            GroupStatistics groupStatistics = groupStatisticsMap.getOrDefault(key, new GroupStatistics());
             groupStatistics.setGroupNumber(schedule.getGroupNumber());
             groupStatistics.setSubject(schedule.getSubject());
 
             List<Mark> marks = markRepository.findBySubjectAndUserId(schedule.getSubject(), Math.toIntExact(schedule.getId()));
             double averageMark = marks.stream().mapToDouble(Mark::getMark).average().orElse(0);
+            if (groupStatisticsMap.containsKey(key)) {
+                averageMark = (groupStatistics.getAverageMark() * groupStatistics.getTotalStudents() + averageMark) / (groupStatistics.getTotalStudents() + 1);
+            }
             groupStatistics.setAverageMark(averageMark);
 
             List<Absenteeism> absenteeisms = absenteeismRepository.findBySubjectAndUserId(schedule.getSubject(), Math.toIntExact(schedule.getId()));
-            groupStatistics.setAbsenteeisms(absenteeisms.size());
-            groupStatisticsList.add(groupStatistics);
+            groupStatistics.setAbsenteeisms(groupStatistics.getAbsenteeisms() + absenteeisms.size());
+
+            groupStatistics.setTotalStudents(groupStatistics.getTotalStudents() + 1);
+
+            groupStatisticsMap.put(key, groupStatistics);
         }
 
-        model.addAttribute("groupStatistics", groupStatisticsList);
+        model.addAttribute("groupStatistics", new ArrayList<>(groupStatisticsMap.values()));
         return "statistics";
     }
+
+
+
 
     @GetMapping("/student-statistics/{userId}")
     public String getStatistics(@PathVariable("userId") int userId, Model model) {

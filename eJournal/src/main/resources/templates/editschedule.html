@@ -10,8 +10,8 @@
 <body>
 <div class="container mt-4">
     <h1>Редактировать предмет в расписании</h1>
-    <form method="post" th:action="@{/editschedule/{id}(id=${schedule.id})}">
-        <input type="hidden" name="id" th:value="${schedule.id}">
+    <form method="post" th:action="@{/schedule/editschedule/{id}(id=${schedule.id})}" th:object="${schedule}">
+    <input type="hidden" name="id" th:value="${schedule.id}">
         <div class="mb-3">
             <label>Предмет</label>
             <input type="text" name="subject" class="form-control" th:value="${schedule.subject}" required>
@@ -32,6 +32,7 @@
             <label>Преподаватель</label>
             <input type="text" name="teacherName" class="form-control" th:value="${schedule.teacherName}" required>
         </div>
+        <input type="hidden" th:field="*{id}">
         <button type="submit" class="btn btn-primary">Сохранить</button>
         <a href="/schedule" class="btn btn-secondary">Отменить</a>
     </form>

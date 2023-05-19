@@ -69,7 +69,7 @@ public class ScheduleController {
     }
 
     @PostMapping("/editschedule/{id}")
-    public String updateSchedule(@PathVariable("id") Long id, Schedule updatedSchedule, Model model) {
+    public String updateSchedule(@PathVariable("id") Long id, @ModelAttribute Schedule updatedSchedule, Model model) {
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Неверный Id:" + id));
         schedule.setSubject(updatedSchedule.getSubject());

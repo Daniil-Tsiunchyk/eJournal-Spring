@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class MarkController {
@@ -39,7 +40,7 @@ public class MarkController {
     }
 
     @PostMapping("/setmark")
-    public String setMark(@RequestParam Long schedule, @RequestParam Long student, @RequestParam double mark) {
+    public String setMark(@RequestParam Long schedule, @RequestParam Long student, @RequestParam double mark, @RequestParam("userId") Long userId, RedirectAttributes redirectAttributes) {
         Schedule selectedSchedule = scheduleRepository.findById(schedule).orElse(null);
         User selectedStudent = userRepository.findById(student).orElse(null);
 
@@ -52,9 +53,11 @@ public class MarkController {
             newMark.setMark(mark);
 
             markRepository.save(newMark);
+
+            redirectAttributes.addFlashAttribute("success", "Оценка " + mark + " была успешно добавлена студенту " + selectedStudent.getName() + " " + selectedStudent.getSurname());
         }
 
-        return "redirect:/setmark";
+        return "redirect:/setmark?userId=" + userId;
     }
 
 

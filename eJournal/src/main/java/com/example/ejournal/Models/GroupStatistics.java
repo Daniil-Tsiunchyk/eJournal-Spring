@@ -5,6 +5,7 @@ public class GroupStatistics {
     private String subject;
     private double averageMark;
     private int absenteeisms;
+    private int totalStudents;
 
     public String getGroupNumber() {
         return groupNumber;
@@ -36,5 +37,13 @@ public class GroupStatistics {
 
     public void setAbsenteeisms(int absenteeisms) {
         this.absenteeisms = absenteeisms;
+    }
+
+    public int getTotalStudents() {
+        return totalStudents;
+    }
+
+    public void setTotalStudents(int totalStudents) {
+        this.totalStudents = totalStudents;
     }
 }
