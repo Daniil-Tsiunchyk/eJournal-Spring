@@ -100,8 +100,48 @@ public class UserController {
         userRepository.save(newUser);
         redirectAttributes.addFlashAttribute("success", "Пользователь создан с ID: " + newUser.getId());
         redirectAttributes.addFlashAttribute("user_info", newUser);
-
         return "redirect:/newuser";
     }
+
+
+    @GetMapping("/student-schedule")
+    public String getStudentSchedule(@RequestParam("userId") int userId, Model model) {
+        User student = userRepository.findById((long) userId).orElse(null);
+        if (student == null) {
+            return "redirect:/authorisation";
+        }
+        assert student != null;
+        List<Schedule> groupSchedules = scheduleRepository.findByGroupNumber(student.getGroupNumber());
+
+        List<String> days = Arrays.asList("Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота");
+        List<String> times = Arrays.asList("9:00-10:20", "10:35-11:55", "12:25-13:45", "14:00-15:20", "15:50-17:10");
+        model.addAttribute("days", days);
+        model.addAttribute("times", times);
+        model.addAttribute("groupSchedules", groupSchedules);
+        model.addAttribute("userId", userId);
+        return "student-schedule";
+    }
+
+    @GetMapping("/tablestudents")
+    public String showTableStudents(@RequestParam(required = false) String groupNumber,
+                                    @RequestParam(required = false) String role,
+                                    Model model) {
+        List<User> users;
+        if ((groupNumber == null || groupNumber.isEmpty()) && (role == null || role.isEmpty())) {
+            users = (List<User>) userRepository.findAll();
+        } else if (role == null || role.isEmpty()) {
+            users = userRepository.findAllByGroupNumber(groupNumber);
+        } else if (groupNumber == null || groupNumber.isEmpty()) {
+            users = userRepository.findAllByRole(role);
+        } else {
+            users = userRepository.findAllByRoleAndGroupNumber(role, groupNumber);
+        }
+
+        List<StudentGroup> groups = studentGroupRepository.findAll();
+
+        model.addAttribute("users", users);
+        model.addAttribute("groups", groups);
+        return "tablestudents";
+    }
+
 }
-//привет марсианам

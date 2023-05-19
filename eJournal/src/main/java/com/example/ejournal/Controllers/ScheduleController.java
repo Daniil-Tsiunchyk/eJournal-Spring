@@ -28,97 +28,79 @@ public class ScheduleController {
     @Autowired
     private UserRepository userRepository;
 
-    private List<String> days = Arrays.asList("Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота");
-    private List<String> times = Arrays.asList("9:00-10:20", "10:35-11:55", "12:25-13:45", "14:00-15:20", "15:50-17:10");
-
-    @GetMapping({"/newschedule", "/editschedule/{id}"})
-    public String handleSchedule(@PathVariable(required = false) Long id, Model model) {
-        if (id != null) {
-            Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid schedule Id:" + id));
-            model.addAttribute("schedule", schedule);
+    @GetMapping
+    public String showSchedule(@RequestParam(required = false) String groupNumber, Model model) {
+        List<Schedule> schedules;
+        if (groupNumber == null) {
+            schedules = scheduleRepository.findAll();
+        } else {
+            schedules = scheduleRepository.findByGroupNumber(groupNumber);
         }
-
-        List<StudentGroup> studentGroups = studentGroupRepository.findAll();
-        model.addAttribute("studentGroups", studentGroups);
+        model.addAttribute("schedules", schedules);
+        List<StudentGroup> groups = studentGroupRepository.findAll();
+        model.addAttribute("groups", groups);
+        List<String> days = Arrays.asList("Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота");
+        List<String> times = Arrays.asList("09:00", "10:35", "12:25", "14:00", "15:50", "17:25");
         model.addAttribute("days", days);
         model.addAttribute("times", times);
-        return id == null ? "newschedule" : "editschedule";
+        return "tableschedule";
     }
 
-    @PostMapping({"/addschedule", "/editschedule/{id}"})
-    public String saveOrUpdateSchedule(Schedule schedule) {
+
+    @GetMapping("/newschedule")
+    public String addSchedule(Model model) {
+        List<StudentGroup> studentGroups = studentGroupRepository.findAll();
+        model.addAttribute("studentGroups", studentGroups);
+        return "newschedule";
+    }
+
+
+    @PostMapping("/addschedule")
+    public String saveSchedule(Schedule schedule) {
         scheduleRepository.save(schedule);
         return "redirect:/schedule";
     }
 
+    @GetMapping("/editschedule/{id}")
+    public String editSchedule(@PathVariable("id") Long id, Model model) {
+        Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid schedule Id:" + id));
+        model.addAttribute("schedule", schedule);
+        return "editschedule";
+    }
+
+    @PostMapping("/editschedule/{id}")
+    public String updateSchedule(@PathVariable("id") Long id, Schedule updatedSchedule, Model model) {
+        Schedule schedule = scheduleRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Неверный Id:" + id));
+        schedule.setSubject(updatedSchedule.getSubject());
+        schedule.setTime(updatedSchedule.getTime());
+        schedule.setDayOfWeek(updatedSchedule.getDayOfWeek());
+        schedule.setGroupNumber(updatedSchedule.getGroupNumber());
+        schedule.setTeacherName(updatedSchedule.getTeacherName());
+        scheduleRepository.save(schedule);
+        return "redirect:/schedule";
+    }
+
+
     @GetMapping("/deleteschedule/{id}")
-    public String deleteSchedule(@PathVariable("id") Long id) {
+    public String deleteSchedule(@PathVariable("id") Long id, Model model) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid schedule Id:" + id));
         scheduleRepository.delete(schedule);
         return "redirect:/schedule";
     }
 
-    @GetMapping({"/teacher-schedule", "/student-schedule"})
-    public String getUserSchedule(@RequestParam int userId, @PathVariable String action, Model model) {
-        Optional<User> userOpt = userRepository.findById((long) userId);
-        if (!userOpt.isPresent()) {
+    @GetMapping("/teacher-schedule")
+    public String showTeacherSchedule(@RequestParam int userId, Model model) {
+        Optional<User> teacherOpt = userRepository.findById((long) userId);
+        if (!teacherOpt.isPresent()) {
             model.addAttribute("error", "Пользователь с id " + userId + " не найден");
             return "authorisation";
         }
-
-        User user = userOpt.get();
-        List<Schedule> userSchedules;
-
-        if ("teacher-schedule".equals(action)) {
-            userSchedules = scheduleRepository.findByTeacherName(user.getName() + " " + user.getSurname());
-        } else {
-            userSchedules = scheduleRepository.findByGroupNumber(user.getGroupNumber());
-        }
-
+        User teacher = teacherOpt.get();
         model.addAttribute("userId", userId);
-        model.addAttribute("userSchedules", userSchedules);
-        model.addAttribute("days", days);
-        model.addAttribute("times", times);
-        return action;
+        List<Schedule> teacherSchedule = scheduleRepository.findByTeacherName(teacher.getName() + " " + teacher.getSurname());
+        model.addAttribute("teacherSchedule", teacherSchedule);
+        return "teacher-schedule";
     }
 
-    @GetMapping({"/tablestudents", "/schedule"})
-    public String showTableOrSchedule(@RequestParam(required = false) String groupNumber, @RequestParam(required = false) String role, Model model) {
-        List<User> users;
-        List<Schedule> schedules;
-
-        if ("tablestudents".equals(role)) {
-            users = getUserList(role, groupNumber);
-            model.addAttribute("users", users);
-        } else {
-            schedules = getScheduleList(groupNumber);
-            model.addAttribute("schedules", schedules);
-            model.addAttribute("days", days);
-            model.addAttribute("times", times);
-        }
-
-        List<StudentGroup> groups = studentGroupRepository.findAll();
-        model.addAttribute("groups", groups);
-        return role;
-    }
-
-    private List<User> getUserList(String role, String groupNumber) {
-        if ((groupNumber == null || groupNumber.isEmpty()) && (role == null || role.isEmpty())) {
-            return (List<User>) userRepository.findAll();
-        } else if (role == null || role.isEmpty()) {
-            return userRepository.findAllByGroupNumber(groupNumber);
-        } else if (groupNumber == null || groupNumber.isEmpty()) {
-            return userRepository.findAllByRole(role);
-        } else {
-            return userRepository.findAllByRoleAndGroupNumber(role, groupNumber);
-        }
-    }
-
-    private List<Schedule> getScheduleList(String groupNumber) {
-        if (groupNumber == null || groupNumber.isEmpty()) {
-            return scheduleRepository.findAll();
-        } else {
-            return scheduleRepository.findAllByGroupNumber(groupNumber);
-        }
-    }
 }

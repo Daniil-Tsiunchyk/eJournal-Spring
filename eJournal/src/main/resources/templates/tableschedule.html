@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Расписание</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/styles.css}"/>
 </head>
 <body>
@@ -11,50 +12,46 @@
 <div class="main">
     <div class="container mt-4">
         <h1 class="text-center mb-4">Расписание</h1>
-        <a href="/schedule/newschedule" class="btn btn-primary mb-2">Добавить предмет в расписание</a>
-        <form th:action="@{/tablestudents}" method="get" class="mb-3">
-            <label for="groupFilter">Фильтр по группе:</label>
-            <select class="form-select" id="groupFilter" name="groupNumber">
-                <option value="">Все группы</option>
-                <option th:each="group : ${groups}" th:value="${group.groupNumber}"
-                        th:text="${group.groupNumber}"></option>
-            </select>
-            <button type="submit" class="btn btn-primary mt-2">Применить фильтр</button>
+        <form method="get" action="/schedule" class="filter-form">
+            <div class="form-group">
+                <select id="groupNumber" name="groupNumber" class="form-control">
+                    <option th:each="group : ${groups}" th:value="${group.groupNumber}"
+                            th:text="${group.groupNumber}"></option>
+                </select>
+            </div>
+            <input type="submit" value="Фильтровать" class="btn btn-primary mb-2">
         </form>
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Время</th>
-                    <th th:each="day : ${days}" th:text="${day}"></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="time : ${times}">
-                    <th th:text="${time}"></th>
-                    <td class="align-center" th:each="day : ${days}">
-                        <div th:each="schedule : ${schedules}"
-                             th:if="${schedule.dayOfWeek} == ${day} and ${schedule.time} == ${time}">
-                            <div th:text="${schedule.subject}"></div>
-                            <div th:text="${schedule.groupNumber}"></div>
-                            <div th:text="${schedule.teacherName}"></div>
-                            <div>
-                                <div>
-                                    <a class="btn btn-sm btn-primary"
-                                       th:href="@{/schedule/editschedule/{id}(id=${schedule.id})}">Редактировать</a>
-                                </div>
-                                <div>
-                                    <a class="btn btn-sm btn-danger"
-                                       th:href="@{/schedule/deleteschedule/{id}(id=${schedule.id})}">Удалить</a>
-                                </div>
+        <br>
+        <a href="/schedule/newschedule" class="btn btn-primary mb-2">Добавить предмет в расписание</a>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Время</th>
+                <th th:each="day : ${days}" th:text="${day}"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="time : ${times}">
+                <th th:text="${time}"></th>
+                <td th:each="day : ${days}">
+                    <div th:each="schedule : ${schedules}"
+                         th:if="${schedule.dayOfWeek} == ${day} and ${schedule.time} == ${time}">
+                        <div th:text="${schedule.subject}"></div>
+                        <div th:text="${schedule.groupNumber}"></div>
+                        <div th:text="${schedule.teacherName}"></div>
+                        <div class="btn-group">
+                            <div class="button-container">
+                                <a class="btn btn-sm btn-primary"
+                                   th:href="@{/schedule/editschedule/{id}(id=${schedule.id})}">Редактировать</a>
+                                <a class="btn btn-sm btn-danger"
+                                   th:href="@{/schedule/deleteschedule/{id}(id=${schedule.id})}">Удалить</a>
                             </div>
                         </div>
-                    </td>
-                </tr>
-
-                </tbody>
-            </table>
-        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 </body>

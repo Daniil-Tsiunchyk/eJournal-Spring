@@ -119,6 +119,7 @@ body {
     width: 100%;
     text-align: center;
 }
+
 .btn-group {
     display: flex;
     flex-direction: column;
@@ -128,4 +129,12 @@ body {
 
 .btn-row {
     margin-bottom: 5px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
 }

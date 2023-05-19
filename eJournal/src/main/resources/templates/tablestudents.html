@@ -22,8 +22,6 @@
                             th:text="${group.groupNumber}"></option>
                 </select>
             </div>
-            <br>
-
             <div class="form-group">
                 <label for="role">Выберите роль:</label>
                 <select id="role" name="role" class="form-control">
@@ -36,6 +34,7 @@
             <br>
             <button type="submit" class="btn btn-primary">Применить фильтр</button>
         </form>
+
         <table class="table table-striped my-3">
             <thead>
             <tr>
@@ -48,6 +47,7 @@
                 <th>Номер группы</th>
                 <th>Имя</th>
                 <th>Фамилия</th>
+                <th>Предмет</th>
                 <th>Действия</th>
             </tr>
             </thead>
@@ -62,6 +62,7 @@
                 <td th:text="${user.groupNumber}"></td>
                 <td th:text="${user.name}"></td>
                 <td th:text="${user.surname}"></td>
+                <td th:text="${user.subject}"></td>
                 <td>
                     <a th:href="@{'/edit-user/' + ${user.id}}" class="btn btn-sm btn-primary">Редактировать</a>
                     <a th:href="@{'/delete-user/' + ${user.id}}" class="btn btn-sm btn-danger">Удалить</a>

@@ -8,6 +8,8 @@ public class StudentGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(name = "group_number")
     private String groupNumber;
 
     public String getGroupNumber() {

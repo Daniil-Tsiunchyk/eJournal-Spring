@@ -14,7 +14,7 @@
     <div class="container">
         <h1 class="my-3">Редактирование пользователя</h1>
 
-        <form method="post" th:action="@{'/edit-user/' + ${user.id}}">
+        <form method="post" th:action="@{/schedule/editschedule/{id}(id=${schedule.id})}">
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" class="form-control" id="email" th:value="${user.email}" name="email" required>
