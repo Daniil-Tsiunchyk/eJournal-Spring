@@ -29,12 +29,13 @@ public class UserController {
     @Autowired
     private ScheduleRepository scheduleRepository;
 
-
     @GetMapping("/edit-user/{id}")
     public String editUser(@PathVariable Long id, Model model) {
         Optional<User> user = userRepository.findById(id);
+        List<StudentGroup> groups = studentGroupRepository.findAll();
         if (user.isPresent()) {
             model.addAttribute("user", user.get());
+            model.addAttribute("groups", groups);
             return "edit-user";
         } else {
             return "redirect:/tablestudents";
@@ -48,8 +49,9 @@ public class UserController {
             User userToUpdate = user.get();
             userToUpdate.setEmail(updatedUser.getEmail());
             userToUpdate.setLogin(updatedUser.getLogin());
+            userToUpdate.setPassword(updatedUser.getPassword());
             userToUpdate.setRole(updatedUser.getRole());
-            userToUpdate.setCreationDate(updatedUser.getCreationDate());
+//            userToUpdate.setCreationDate(updatedUser.getCreationDate());
             userToUpdate.setStatus(updatedUser.getStatus());
             userToUpdate.setGroupNumber(updatedUser.getGroupNumber());
             userToUpdate.setName(updatedUser.getName());
@@ -78,8 +80,8 @@ public class UserController {
                            @RequestParam("login") String login,
                            @RequestParam("group") Long groupId,
                            @RequestParam("role") String role,
-                           @RequestParam("name") String name, // Add this line
-                           @RequestParam("surname") String surname, // Add this line
+                           @RequestParam("name") String name,
+                           @RequestParam("surname") String surname,
                            RedirectAttributes redirectAttributes) {
 
         StudentGroup group = studentGroupRepository.findById(groupId).orElse(null);

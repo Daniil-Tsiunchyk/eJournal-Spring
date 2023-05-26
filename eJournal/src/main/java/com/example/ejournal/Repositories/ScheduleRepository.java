@@ -13,5 +13,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     List<Schedule> findByTeacherName(String teacherName);
 
     List<Schedule> findAllByGroupNumber(String groupNumber);
+    List<Schedule> findBySubject(String subject);
 
 }

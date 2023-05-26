@@ -14,7 +14,7 @@
     <div class="container">
         <h1 class="my-3">Редактирование пользователя</h1>
 
-        <form method="post" th:action="@{/schedule/editschedule/{id}(id=${schedule.id})}">
+        <form method="post" th:action="@{/edit-user/{id}(id=${user.id})}">
             <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" class="form-control" id="email" th:value="${user.email}" name="email" required>
@@ -32,8 +32,16 @@
                 <input type="text" class="form-control" id="status" th:value="${user.status}" name="status" required>
             </div>
             <div class="form-group">
+                <label for="password">Пароль:</label>
+                <input type="password" class="form-control" id="password" th:value="${user.password}" name="password">
+            </div>
+            <div class="form-group">
                 <label for="groupNumber">Номер группы:</label>
-                <input type="text" class="form-control" id="groupNumber" th:value="${user.groupNumber}" name="groupNumber" required>
+                <select class="form-control" id="groupNumber" name="groupNumber" th:value="${user.groupNumber}">
+                    <option th:each="group : ${groups}" th:value="${group.groupNumber}"
+                            th:text="${group.groupNumber}"></option>
+                </select>
+
             </div>
             <div class="form-group">
                 <label for="name">Имя:</label>
@@ -47,7 +55,7 @@
                 <label for="subject">Предмет:</label>
                 <input type="text" class="form-control" id="subject" th:value="${user.subject}" name="subject" required>
             </div>
-
+            <br>
             <button type="submit" class="btn btn-primary">Сохранить изменения</button>
         </form>
     </div>

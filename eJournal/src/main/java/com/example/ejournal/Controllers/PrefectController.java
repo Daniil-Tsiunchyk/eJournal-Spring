@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -30,30 +32,48 @@ public class PrefectController {
     private AbsenteeismRepository absenteeismRepository;
 
     @GetMapping("/teacher-schedule")
-    public String getTeacherSchedule(@RequestParam("userId") Long userId, Model model) {
-        User user = userRepository.findById(userId).orElse(null);
-
-        if (user == null || !user.getRole().equals("TEACHER")) {
-            return "redirect:/";
+    public String showTeacherSchedule(@RequestParam int userId, Model model) {
+        Optional<User> teacherOpt = userRepository.findById((long) userId);
+        if (!teacherOpt.isPresent()) {
+            model.addAttribute("error", "Пользователь с id " + userId + " не найден");
+            return "authorisation";
         }
-
-        List<Schedule> teacherSchedules = scheduleRepository.findByTeacherName(user.getName());
-
-        model.addAttribute("schedules", teacherSchedules);
+        User teacher = teacherOpt.get();
         model.addAttribute("userId", userId);
+        model.addAttribute("teacher", teacher);
+
+        List<Schedule> teacherSchedule = scheduleRepository.findBySubject(teacher.getSubject().trim());
+        model.addAttribute("teacherSchedule", teacherSchedule);
+
+        List<String> days = Arrays.asList("Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота");
+        List<String> times = Arrays.asList("09:00", "10:35", "12:25", "14:00", "15:50", "17:25");
+        model.addAttribute("days", days);
+        model.addAttribute("times", times);
 
         return "teacher-schedule";
     }
 
+
     @GetMapping("/setabsenteeism")
     public String setAbsenteeismPage(@RequestParam("userId") Long userId, Model model) {
-        List<Schedule> schedules = scheduleRepository.findAll();
-        List<User> students = userRepository.findByRole("student");
-        model.addAttribute("schedules", schedules);
-        model.addAttribute("students", students);
+        Optional<User> teacherOpt = userRepository.findById(userId);
+        if (teacherOpt.isEmpty()) {
+            model.addAttribute("error", "Пользователь с id " + userId + " не найден");
+            return "authorisation";
+        }
+        User teacher = teacherOpt.get();
         model.addAttribute("userId", userId);
+        model.addAttribute("teacher", teacher);
+
+        List<Schedule> schedules = scheduleRepository.findBySubject(teacher.getSubject().trim());
+        model.addAttribute("schedules", schedules);
+
+        List<User> students = userRepository.findByRole("student");
+        model.addAttribute("students", students);
+
         return "setabsenteeism";
     }
+
 
     @PostMapping("/setabsenteeism")
     public String setAbsenteeism(@RequestParam Long schedule, @RequestParam Long student, @RequestParam("userId") Long userId, RedirectAttributes redirectAttributes) {

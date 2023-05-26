@@ -34,6 +34,7 @@ public class User {
     @Column
     private String subject;
 
+
     public String getName() {
         return name;
     }

@@ -4,6 +4,7 @@ import com.example.ejournal.Models.*;
 import com.example.ejournal.Repositories.AbsenteeismRepository;
 import com.example.ejournal.Repositories.MarkRepository;
 import com.example.ejournal.Repositories.ScheduleRepository;
+import com.example.ejournal.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +29,9 @@ public class StatisticsController {
     @Autowired
     private ScheduleRepository scheduleRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @RequestMapping("/statistics")
     public String getStatistics(Model model) {
         Map<String, GroupStatistics> groupStatisticsMap = new HashMap<>();
@@ -39,17 +43,24 @@ public class StatisticsController {
             groupStatistics.setGroupNumber(schedule.getGroupNumber());
             groupStatistics.setSubject(schedule.getSubject());
 
-            List<Mark> marks = markRepository.findBySubjectAndUserId(schedule.getSubject(), Math.toIntExact(schedule.getId()));
-            double averageMark = marks.stream().mapToDouble(Mark::getMark).average().orElse(0);
-            if (groupStatisticsMap.containsKey(key)) {
-                averageMark = (groupStatistics.getAverageMark() * groupStatistics.getTotalStudents() + averageMark) / (groupStatistics.getTotalStudents() + 1);
+            List<User> students = userRepository.findByGroupNumber(schedule.getGroupNumber());
+
+            double totalMarks = 0;
+            int totalMarksCount = 0;
+            int totalAbsenteeisms = 0;
+            for (User student : students) {
+                List<Mark> marks = markRepository.findBySubjectAndUserId(schedule.getSubject(), Math.toIntExact(student.getId()));
+                totalMarks += marks.stream().mapToDouble(Mark::getMark).sum();
+                totalMarksCount += marks.size();
+
+                List<Absenteeism> absenteeisms = absenteeismRepository.findBySubjectAndUserId(schedule.getSubject(), Math.toIntExact(student.getId()));
+                totalAbsenteeisms += absenteeisms.size();
             }
+
+            double averageMark = totalMarksCount > 0 ? totalMarks / totalMarksCount : 0;
             groupStatistics.setAverageMark(averageMark);
-
-            List<Absenteeism> absenteeisms = absenteeismRepository.findBySubjectAndUserId(schedule.getSubject(), Math.toIntExact(schedule.getId()));
-            groupStatistics.setAbsenteeisms(groupStatistics.getAbsenteeisms() + absenteeisms.size());
-
-            groupStatistics.setTotalStudents(groupStatistics.getTotalStudents() + 1);
+            groupStatistics.setAbsenteeisms(totalAbsenteeisms);
+            groupStatistics.setTotalStudents(students.size());
 
             groupStatisticsMap.put(key, groupStatistics);
         }
@@ -57,9 +68,6 @@ public class StatisticsController {
         model.addAttribute("groupStatistics", new ArrayList<>(groupStatisticsMap.values()));
         return "statistics";
     }
-
-
-
 
     @GetMapping("/student-statistics/{userId}")
     public String getStatistics(@PathVariable("userId") int userId, Model model) {

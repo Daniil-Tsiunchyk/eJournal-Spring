@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -31,13 +33,24 @@ public class MarkController {
 
     @GetMapping("/setmark")
     public String setMarkPage(@RequestParam("userId") Long userId, Model model) {
-        List<Schedule> schedules = scheduleRepository.findAll();
-        List<User> students = userRepository.findByRole("student");
-        model.addAttribute("schedules", schedules);
-        model.addAttribute("students", students);
+        Optional<User> teacherOpt = userRepository.findById(userId);
+        if (teacherOpt.isEmpty()) {
+            model.addAttribute("error", "Пользователь с id " + userId + " не найден");
+            return "authorisation";
+        }
+        User teacher = teacherOpt.get();
         model.addAttribute("userId", userId);
+        model.addAttribute("teacher", teacher);
+
+        List<Schedule> schedules = scheduleRepository.findBySubject(teacher.getSubject().trim());
+        model.addAttribute("schedules", schedules);
+
+        List<User> students = userRepository.findByRole("student");
+        model.addAttribute("students", students);
+
         return "setmark";
     }
+
 
     @PostMapping("/setmark")
     public String setMark(@RequestParam Long schedule, @RequestParam Long student, @RequestParam double mark, @RequestParam("userId") Long userId, RedirectAttributes redirectAttributes) {

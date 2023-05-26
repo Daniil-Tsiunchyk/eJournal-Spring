@@ -5,7 +5,6 @@
     <title>Расписание преподавателя</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/styles.css}"/>
-    <link rel="stylesheet" th:href="@{/css/yaklass.css}"/>
 </head>
 <body>
 <div class="sidebar">
@@ -15,5 +14,37 @@
     <a th:href="@{/setabsenteeism(userId=${userId})}">Записать прогул</a>
     <a href="/">Выйти</a>
 </div>
+
+<div class="main">
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Расписание</h1>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Время</th>
+                <th th:each="day : ${days}" th:text="${day}"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="time : ${times}">
+                <th th:text="${time}"></th>
+                <td th:each="day : ${days}">
+                    <div th:each="schedule : ${teacherSchedule}"
+                         th:if="${schedule.dayOfWeek != null && schedule.time != null && schedule.subject != null &&
+             schedule.dayOfWeek.trim().equals(day.trim()) &&
+             schedule.time.trim().equals(time.trim()) &&
+             schedule.subject.trim().equals(teacher.subject.trim())}">
+
+                        <div th:text="${schedule.subject}"></div>
+                        <div th:text="${schedule.groupNumber}"></div>
+                        <div th:text="${schedule.teacherName}"></div>
+                    </div>
+                </td>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
 </body>
 </html>
