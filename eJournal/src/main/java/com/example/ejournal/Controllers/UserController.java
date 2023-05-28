@@ -112,8 +112,6 @@ public class UserController {
         if (student == null) {
             return "redirect:/authorisation";
         }
-        assert student != null;
-        System.out.println("Group number for student with id " + userId + ": " + student.getGroupNumber());
 
         List<Schedule> groupSchedules = scheduleRepository.findByGroupNumber(student.getGroupNumber());
 
@@ -149,4 +147,24 @@ public class UserController {
         return "tablestudents";
     }
 
+    @GetMapping("/editUser/{id}")
+    public String showEditUserForm(@PathVariable("id") Long id, Model model) {
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id: " + id));
+        model.addAttribute("user", user);
+        return "edit-user";
+    }
+
+    @PostMapping("/updateUser")
+    public String updateUser(@RequestParam("userId") Long userId,
+                             @RequestParam("email") String email,
+                             @RequestParam("login") String login,
+                             @RequestParam("groupNumber") String groupNumber) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user Id: " + userId));
+        user.setEmail(email);
+        user.setLogin(login);
+        user.setGroupNumber(groupNumber);
+        userRepository.save(user);
+
+        return "redirect:/tablestudents";
+    }
 }

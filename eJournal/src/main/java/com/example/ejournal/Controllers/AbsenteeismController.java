@@ -1,20 +1,22 @@
 package com.example.ejournal.Controllers;
 
 import com.example.ejournal.Models.Absenteeism;
+import com.example.ejournal.Models.Schedule;
 import com.example.ejournal.Models.StudentGroup;
 import com.example.ejournal.Models.User;
 import com.example.ejournal.Repositories.AbsenteeismRepository;
+import com.example.ejournal.Repositories.ScheduleRepository;
 import com.example.ejournal.Repositories.StudentGroupRepository;
 import com.example.ejournal.Repositories.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class AbsenteeismController {
@@ -27,6 +29,9 @@ public class AbsenteeismController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ScheduleRepository scheduleRepository;
 
     @GetMapping("/tableabsenteeism")
     public String showStudentTable(@RequestParam(required = false) Integer userId, Model model) {
@@ -57,6 +62,50 @@ public class AbsenteeismController {
         model.addAttribute("absences", absenteeismRepository.findByUserId(Math.toIntExact(userId)));
         return "tableabsenteeism";
     }
+
+    @GetMapping("/setabsenteeism")
+    public String setAbsenteeismPage(Model model, HttpSession session) {
+        User teacher = (User) session.getAttribute("user");
+        if (teacher == null) {
+            return "authorisation";
+        }
+        model.addAttribute("userId", teacher.getId());
+        model.addAttribute("teacher", teacher);
+
+        List<Schedule> schedules = scheduleRepository.findBySubject(teacher.getSubject().trim());
+        model.addAttribute("schedules", schedules);
+
+        List<User> students = userRepository.findAllByRole("student");
+        model.addAttribute("students", students);
+
+        return "setabsenteeism";
+    }
+
+
+    @PostMapping("/setabsenteeism")
+    public String setAbsenteeism(@RequestParam Long schedule, @RequestParam Long student, RedirectAttributes redirectAttributes, HttpSession session) {
+        User teacher = (User) session.getAttribute("user");
+        if (teacher == null) {
+            return "authorisation";
+        }
+
+        Schedule selectedSchedule = scheduleRepository.findById(schedule).orElse(null);
+        User selectedStudent = userRepository.findById(student).orElse(null);
+
+        if (selectedSchedule != null && selectedStudent != null) {
+            Absenteeism newAbsenteeism = new Absenteeism();
+            newAbsenteeism.setSubject(selectedSchedule.getSubject());
+            newAbsenteeism.setTime(selectedSchedule.getTime());
+            newAbsenteeism.setDate(selectedSchedule.getDayOfWeek());
+            newAbsenteeism.setUserId(selectedStudent.getId().intValue());
+
+            absenteeismRepository.save(newAbsenteeism);
+            redirectAttributes.addFlashAttribute("success", "Прогул успешно записан для студента " + selectedStudent.getName() + " " + selectedStudent.getSurname());
+        }
+
+        return "redirect:/setabsenteeism";
+    }
+
 }
 
 

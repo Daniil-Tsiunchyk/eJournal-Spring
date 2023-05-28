@@ -45,7 +45,7 @@ public class MarkController {
         List<Schedule> schedules = scheduleRepository.findBySubject(teacher.getSubject().trim());
         model.addAttribute("schedules", schedules);
 
-        List<User> students = userRepository.findByRole("student");
+        List<User> students = userRepository.findAllByRole("student");
         model.addAttribute("students", students);
 
         return "setmark";
@@ -84,7 +84,7 @@ public class MarkController {
 
     @GetMapping("/tablestudents/{groupNumber}")
     public String showStudentsByGroup(@PathVariable String groupNumber, Model model) {
-        List<User> users = userRepository.findByGroupNumber(groupNumber);
+        List<User> users = userRepository.findAllByGroupNumber(groupNumber);
 
         model.addAttribute("students", users);
 

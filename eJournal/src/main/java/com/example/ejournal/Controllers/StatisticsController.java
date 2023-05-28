@@ -43,7 +43,7 @@ public class StatisticsController {
             groupStatistics.setGroupNumber(schedule.getGroupNumber());
             groupStatistics.setSubject(schedule.getSubject());
 
-            List<User> students = userRepository.findByGroupNumber(schedule.getGroupNumber());
+            List<User> students = userRepository.findAllByGroupNumber(schedule.getGroupNumber());
 
             double totalMarks = 0;
             int totalMarksCount = 0;

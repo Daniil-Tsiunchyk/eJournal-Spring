@@ -8,9 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface UserRepository extends CrudRepository<User, Long> {
-    User findByEmailAndPassword(String email, String password);
 
-    List<User> findByGroupNumber(String groupNumber);
 
     @Query("SELECT COUNT(u) FROM User u WHERE u.groupNumber = :group_number")
     Integer countUsersByGroupNumber(@Param("group_number") String group_number);
@@ -19,9 +17,9 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     List<User> findAllByRoleAndGroupNumber(String role, String groupNumber);
 
-    List<User> findByRole(String role);
-
     List<User> findAllByGroupNumber(String groupNumber);
+
+    User findByEmailAndPassword(String email, String password);
 
     User findByLoginAndPassword(String login, String password);
 
