@@ -1,4 +1,4 @@
-"# eJournal-Web-Application
+# eJournal-Web-Application
 <a id="top"></a>
 
 ## Содержание
