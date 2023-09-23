@@ -1,8 +1,10 @@
 package com.example.ejournal.Models;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
+@Data
 @Table(name = "student_group")
 public class StudentGroup {
     @Id
@@ -11,20 +13,4 @@ public class StudentGroup {
 
     @Column(name = "group_number")
     private String groupNumber;
-
-    public String getGroupNumber() {
-        return groupNumber;
-    }
-
-    public void setGroupNumber(String groupNumber) {
-        this.groupNumber = groupNumber;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

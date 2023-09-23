@@ -5,27 +5,28 @@ import com.example.ejournal.Models.StudentGroup;
 import com.example.ejournal.Models.User;
 import com.example.ejournal.Repositories.ScheduleRepository;
 import com.example.ejournal.Repositories.StudentGroupRepository;
-import com.example.ejournal.Repositories.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.InvalidParameterException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("")
 public class ScheduleController {
 
-    @Autowired
-    private ScheduleRepository scheduleRepository;
+    private final ScheduleRepository scheduleRepository;
+
+    private final StudentGroupRepository studentGroupRepository;
 
     @Autowired
-    private StudentGroupRepository studentGroupRepository;
+    public ScheduleController(ScheduleRepository scheduleRepository, StudentGroupRepository studentGroupRepository) {
+        this.scheduleRepository = scheduleRepository;
+        this.studentGroupRepository = studentGroupRepository;
+    }
 
     @GetMapping("/schedule")
     public String showSchedule(@RequestParam(required = false) String groupNumber, Model model) {

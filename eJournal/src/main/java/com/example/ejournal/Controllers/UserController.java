@@ -20,14 +20,18 @@ import java.util.Optional;
 @Controller
 public class UserController {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    private final StudentGroupRepository studentGroupRepository;
+
+    private final ScheduleRepository scheduleRepository;
 
     @Autowired
-    private StudentGroupRepository studentGroupRepository;
-
-    @Autowired
-    private ScheduleRepository scheduleRepository;
+    public UserController(UserRepository userRepository, StudentGroupRepository studentGroupRepository, ScheduleRepository scheduleRepository) {
+        this.userRepository = userRepository;
+        this.studentGroupRepository = studentGroupRepository;
+        this.scheduleRepository = scheduleRepository;
+    }
 
     @GetMapping("/edit-user/{id}")
     public String editUser(@PathVariable Long id, Model model) {

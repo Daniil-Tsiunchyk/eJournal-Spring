@@ -20,17 +20,21 @@ import java.util.Map;
 @Controller
 public class StatisticsController {
 
-    @Autowired
-    private MarkRepository markRepository;
+    private final MarkRepository markRepository;
+
+    private final AbsenteeismRepository absenteeismRepository;
+
+    private final ScheduleRepository scheduleRepository;
+
+    private final UserRepository userRepository;
 
     @Autowired
-    private AbsenteeismRepository absenteeismRepository;
-
-    @Autowired
-    private ScheduleRepository scheduleRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+    public StatisticsController(MarkRepository markRepository, AbsenteeismRepository absenteeismRepository, ScheduleRepository scheduleRepository, UserRepository userRepository) {
+        this.markRepository = markRepository;
+        this.absenteeismRepository = absenteeismRepository;
+        this.scheduleRepository = scheduleRepository;
+        this.userRepository = userRepository;
+    }
 
     @RequestMapping("/statistics")
     public String getStatistics(Model model) {

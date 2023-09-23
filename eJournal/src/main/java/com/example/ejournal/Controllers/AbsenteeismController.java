@@ -16,22 +16,25 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class AbsenteeismController {
 
-    @Autowired
-    private StudentGroupRepository studentGroupRepository;
+    private final StudentGroupRepository studentGroupRepository;
+
+    private final AbsenteeismRepository absenteeismRepository;
+
+    private final UserRepository userRepository;
+
+    private final ScheduleRepository scheduleRepository;
 
     @Autowired
-    private AbsenteeismRepository absenteeismRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private ScheduleRepository scheduleRepository;
+    public AbsenteeismController(StudentGroupRepository studentGroupRepository, AbsenteeismRepository absenteeismRepository, UserRepository userRepository, ScheduleRepository scheduleRepository) {
+        this.studentGroupRepository = studentGroupRepository;
+        this.absenteeismRepository = absenteeismRepository;
+        this.userRepository = userRepository;
+        this.scheduleRepository = scheduleRepository;
+    }
 
     @GetMapping("/tableabsenteeism")
     public String showStudentTable(@RequestParam(required = false) Integer userId, Model model) {

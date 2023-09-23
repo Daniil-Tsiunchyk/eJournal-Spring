@@ -22,14 +22,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class MarkController {
 
-    @Autowired
-    private MarkRepository markRepository;
+    private final MarkRepository markRepository;
+
+    private final UserRepository userRepository;
+
+    private final ScheduleRepository scheduleRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private ScheduleRepository scheduleRepository;
+    public MarkController(MarkRepository markRepository, UserRepository userRepository, ScheduleRepository scheduleRepository) {
+        this.markRepository = markRepository;
+        this.userRepository = userRepository;
+        this.scheduleRepository = scheduleRepository;
+    }
 
     @GetMapping("/setmark")
     public String setMarkPage(@RequestParam("userId") Long userId, Model model) {

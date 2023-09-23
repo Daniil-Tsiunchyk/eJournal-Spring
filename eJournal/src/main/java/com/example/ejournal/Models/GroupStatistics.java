@@ -1,49 +1,12 @@
 package com.example.ejournal.Models;
 
+import lombok.Data;
+
+@Data
 public class GroupStatistics {
     private String groupNumber;
     private String subject;
     private double averageMark;
     private int absenteeisms;
     private int totalStudents;
-
-    public String getGroupNumber() {
-        return groupNumber;
-    }
-
-    public void setGroupNumber(String groupNumber) {
-        this.groupNumber = groupNumber;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    public double getAverageMark() {
-        return averageMark;
-    }
-
-    public void setAverageMark(double averageMark) {
-        this.averageMark = averageMark;
-    }
-
-    public int getAbsenteeisms() {
-        return absenteeisms;
-    }
-
-    public void setAbsenteeisms(int absenteeisms) {
-        this.absenteeisms = absenteeisms;
-    }
-
-    public int getTotalStudents() {
-        return totalStudents;
-    }
-
-    public void setTotalStudents(int totalStudents) {
-        this.totalStudents = totalStudents;
-    }
 }

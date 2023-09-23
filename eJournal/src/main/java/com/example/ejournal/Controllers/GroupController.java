@@ -19,11 +19,15 @@ import java.util.Map;
 @Controller
 public class GroupController {
 
-    @Autowired
-    private StudentGroupRepository studentGroupRepository;
+    private final StudentGroupRepository studentGroupRepository;
+
+    private final UserRepository userRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    public GroupController(StudentGroupRepository studentGroupRepository, UserRepository userRepository) {
+        this.studentGroupRepository = studentGroupRepository;
+        this.userRepository = userRepository;
+    }
 
     @GetMapping("/newgroup")
     public String showNewGroupForm() {

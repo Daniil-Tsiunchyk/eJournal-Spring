@@ -13,8 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class AuthorisationController {
+    private final UserRepository userRepository;
+
     @Autowired
-    private UserRepository userRepository;
+    public AuthorisationController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @PostMapping("/login")
     public String loginUser(@RequestParam String identifier, @RequestParam String password, Model model, HttpSession session) {
