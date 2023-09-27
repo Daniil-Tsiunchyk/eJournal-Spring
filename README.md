@@ -62,7 +62,7 @@
 
 1. Клонировать репозиторий
 ```shell
-git clone https://github.com/Heimdall-Program/eJournal-Java-Spring-Boot.git
+git clone https://github.com/Daniil-Tsiunchyk/eJournal-Java-Spring-Boot.git
 ```
 
 2. Перейти в каталог проекта
